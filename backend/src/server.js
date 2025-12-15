@@ -2,6 +2,9 @@ import express from "express";
 import { ENV } from "./lib/env.js";
 import path from "path";
 import { connectDB } from "./lib/db.js";
+import cors from "cors";
+import { serve } from "inngest/express";
+import { inngest,functions } from "./lib/inngest.js";
 
 const app = express();
 
@@ -14,6 +17,12 @@ app.get("/something", (req, res) => {
 });
 
 const __dirname = path.resolve();
+
+//Middleware
+
+app.use(express.json());
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use("api/inngest", serve({ client: inngest, functions }));
 
 if (ENV.NODE_ENV === "production") {
   //Serve the built frontend files (React/Vite) to the user
@@ -35,3 +44,11 @@ const startServer = async () => {
 };
 
 startServer();
+
+/*
+serve is a ready-made Express handler provided by Inngest
+It knows how to:
+Receive events
+Trigger Inngest functions
+Handle retries, errors, execution
+ */
