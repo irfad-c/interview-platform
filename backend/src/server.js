@@ -4,7 +4,7 @@ import path from "path";
 import { connectDB } from "./lib/db.js";
 import cors from "cors";
 import { serve } from "inngest/express";
-import { inngest,functions } from "./lib/inngest.js";
+import { inngest, functions } from "./lib/inngest.js";
 
 const app = express();
 
@@ -16,22 +16,11 @@ app.get("/something", (req, res) => {
   res.status(200).json({ message: "This is something" });
 });
 
-const __dirname = path.resolve();
-
 //Middleware
 
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
-app.use("api/inngest", serve({ client: inngest, functions }));
-
-if (ENV.NODE_ENV === "production") {
-  //Serve the built frontend files (React/Vite) to the user
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  //This is a catch-all route
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-  });
-}
+app.use("/api/inngest", serve({ client: inngest, functions }));
 
 const startServer = async () => {
   try {
@@ -52,3 +41,14 @@ Receive events
 Trigger Inngest functions
 Handle retries, errors, execution
  */
+
+/*
+const __dirname = path.resolve();
+if (ENV.NODE_ENV === "production") {
+  //Serve the built frontend files (React/Vite) to the user
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  //This is a catch-all route
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
+}*/
