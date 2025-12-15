@@ -8,6 +8,12 @@ import { inngest, functions } from "./lib/inngest.js";
 
 const app = express();
 
+//Middleware
+
+app.use(express.json());
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use("/api/inngest", serve({ client: inngest, functions }));
+
 app.get("/", (req, res) => {
   res.status(200).json({ message: "success from backend" });
 });
@@ -15,12 +21,6 @@ app.get("/", (req, res) => {
 app.get("/something", (req, res) => {
   res.status(200).json({ message: "This is something" });
 });
-
-//Middleware
-
-app.use(express.json());
-app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
-app.use("/api/inngest", serve({ client: inngest, functions }));
 
 const startServer = async () => {
   try {
