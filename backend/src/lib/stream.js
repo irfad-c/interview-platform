@@ -21,9 +21,12 @@ export const upsertStreamUser = async (userData) => {
 
 export const deleteStreamUser = async (userId) => {
   try {
-    await chatClient.upsertUser(userId);
+    await chatClient.deleteUser(userId);
     console.log("Deleted stream user successfully");
   } catch (error) {
     console.error("Cant delete user from stream");
   }
 };
+/*
+getInstance creates (or returns) a single Stream Chat client that your backend will use to talk to Stream’s servers.
+*/
