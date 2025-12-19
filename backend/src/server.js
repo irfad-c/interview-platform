@@ -39,7 +39,7 @@ It knows how to:
 Receive events
 Trigger Inngest functions
 Handle retries, errors, execution
- */
+*/
 
 /*
 const __dirname = path.resolve();

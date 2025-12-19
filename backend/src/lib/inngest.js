@@ -1,17 +1,14 @@
 import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import User from "../models/User.js";
+import { deleteStreamUser, upsertStreamUser } from "./stream.js";
 
 //This file listen for an event from clerk
 export const inngest = new Inngest({ id: "talent-iq" });
 //sync a new user into mongoDB database
 const syncUser = inngest.createFunction(
-  {
-    id: "sync user",
-  },
-  {
-    event: "clerk/user.created",
-  },
+  { id: "sync user" },
+  { event: "clerk/user.created" },
   async ({ event }) => {
     await connectDB();
     const { id, email_addresses, first_name, last_name, image_url } =
@@ -23,26 +20,28 @@ const syncUser = inngest.createFunction(
       profileImage: image_url,
     };
     await User.create(newUser);
+    await upsertStreamUser({
+      id: newUser.clerkId.toString(),
+      name: newUser.name,
+      image: newUser.profileImage,
+    });
   }
 );
 
 //Delete user from mongoDB
+
 const deleteUserFromDB = inngest.createFunction(
-  {
-    id: "delete-user-from-db",
-  },
-  {
-    event: "clerk/user.deleted",
-  },
+  { id: "delete-user-from-db" },
+  { event: "clerk/user.deleted" },
   async ({ event }) => {
     await connectDB();
     const { id } = event.data;
-
     await User.deleteOne({ clerkId: id });
+    await deleteStreamUser(id.toString());
   }
 );
 
-export const functions = [syncUser,deleteUserFromDB];
+export const functions = [syncUser, deleteUserFromDB];
 
 /*
 Inngest is a background job system
