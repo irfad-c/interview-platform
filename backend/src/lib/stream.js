@@ -15,7 +15,9 @@ export const upsertStreamUser = async (userData) => {
     await chatClient.upsertUser(userData);
     console.log("Upserted stream user successfully");
   } catch (error) {
-    console.error("Cant upsert user from stream");
+    console.error("Cant upsert user from stream",error.message);
+    console.error("Details",error);
+    throw error
   }
 };
 
