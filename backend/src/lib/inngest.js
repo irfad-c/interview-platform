@@ -10,7 +10,9 @@ const syncUser = inngest.createFunction(
   { id: "sync user" },
   { event: "clerk/user.created" },
   async ({ event }) => {
+    console.log("Inngest sync user started");
     await connectDB();
+    console.log("DB connected");
     const { id, email_addresses, first_name, last_name, image_url } =
       event.data;
     const newUser = {
@@ -19,12 +21,21 @@ const syncUser = inngest.createFunction(
       name: `${first_name || ""} ${last_name || ""}`,
       profileImage: image_url,
     };
-    await User.create(newUser);
+    await User.findOneAndUpdate(
+      {
+        clerkId: id,
+      },
+      newUser,
+      { upsert: true, new: true }
+    );
+    console.log("New user created in DB");
+
     await upsertStreamUser({
       id: newUser.clerkId.toString(),
       name: newUser.name,
       image: newUser.profileImage,
     });
+    console.log("Stream upsert user fininshed");
   }
 );
 
