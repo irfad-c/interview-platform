@@ -2,6 +2,7 @@ import { Inngest } from "inngest";
 import { connectDB } from "./db.js";
 import User from "../models/User.js";
 import { deleteStreamUser, upsertStreamUser } from "./stream.js";
+import { welcomeEmail } from "./resend.js";
 
 //This file listen for an event from clerk
 export const inngest = new Inngest({ id: "talent-iq" });
@@ -29,13 +30,17 @@ const syncUser = inngest.createFunction(
       { upsert: true, new: true }
     );
     console.log("New user created in DB");
-
     await upsertStreamUser({
       id: newUser.clerkId.toString(),
       name: newUser.name,
       image: newUser.profileImage,
     });
     console.log("Stream upsert user fininshed");
+    await welcomeEmail({
+      to: newUser.email,
+      name: newUser.name,
+    });
+    console.log("Welcome Email sent");
   }
 );
 
