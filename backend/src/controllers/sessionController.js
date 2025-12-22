@@ -52,13 +52,30 @@ export async function createSession(req, res) {
 
 export async function getActiveSession(req, res) {
   try {
-    const session = await Session.find({ status: "active" })
+    const sessions = await Session.find({ status: "active" })
       .populate("host", "name profileImage email clerkId")
       .sort({ createdAt: -1 })
       .limit(20);
-    res.status(200).json({ session });
+    res.status(200).json({ sessions });
   } catch (error) {
     console.error("Error to get active session details", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function getMyRecentSession(req, res) {
+  try {
+    const userId = req.user._id;
+    const sessions = await Session.find({
+      status: "completed",
+      //Include sessions where ANY ONE of these is true.
+      $or: [{ host: userId }, { participant: userId }],
+    })
+      .sort({ createdAt: -1 })
+      .limit(20);
+    res.status(200).json({ sessions });
+  } catch (error) {
+    console.error("Error to get recent session details", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 }
