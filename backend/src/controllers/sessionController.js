@@ -25,15 +25,16 @@ export async function createSession(req, res) {
       callId,
     });
     //create stream video call
-    await streamClient.video.call("default", callId).
-   /* If the call already exists → fetch it
+    await streamClient.video
+      .call("default", callId)
+      /* If the call already exists → fetch it
       If it doesn’t exist → create it */
-    getOrCreate({
-      data: {
-        created_by_id: clerkId,
-        custom: { problem, difficulty, sessionId: session._id.toString() },
-      },
-    });
+      .getOrCreate({
+        data: {
+          created_by_id: clerkId,
+          custom: { problem, difficulty, sessionId: session._id.toString() },
+        },
+      });
     //create stream chat channel
     const channel = chatClient.channel("messaging", callId, {
       name: `${problem}Session`,
@@ -45,6 +46,19 @@ export async function createSession(req, res) {
     res.status(201).json({ session });
   } catch (error) {
     console.error("Error in creating session", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function getActiveSession(req, res) {
+  try {
+    const session = await Session.find({ status: "active" })
+      .populate("host", "name profileImage email clerkId")
+      .sort({ createdAt: -1 })
+      .limit(20);
+    res.status(200).json({ session });
+  } catch (error) {
+    console.error("Error to get active session details", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 }
