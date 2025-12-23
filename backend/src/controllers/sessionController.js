@@ -83,7 +83,7 @@ export async function getMyRecentSession(req, res) {
 export async function getSessionById() {
   try {
     const { id } = req.params;
-    const sessions = await Session.findById({ id })
+    const sessions = await Session.findById( id )
       .populate("host", "name profileImage clerkId email")
       .populate("participant", "name profileImage clerkId email");
 
