@@ -80,6 +80,24 @@ export async function getMyRecentSession(req, res) {
   }
 }
 
+export async function getSessionById() {
+  try {
+    const { id } = req.params;
+    const sessions = await Session.findById({ id })
+      .populate("host", "name profileImage clerkId email")
+      .populate("participant", "name profileImage clerkId email");
+
+    if (!sessions) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    res.status(200).json({ sessions });
+  } catch (error) {
+    console.error("Error to get session details", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 /*
 Date.now() return current time in milliseconds
 
