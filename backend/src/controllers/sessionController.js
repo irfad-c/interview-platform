@@ -121,6 +121,40 @@ export async function joinSession(req, res) {
   }
 }
 
+export async function endSession(req, res) {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    const sessions = await Session.findById(id);
+    if (!sessions)
+      return res.status(404).json({ message: "Session not found" });
+
+    //check if the user is host
+
+    if (sessions.host.toString() !== userId.toString()) {
+      return res.status(403).json({ message: "Only host can end the session" });
+    }
+
+    //check if session is already completed
+    if (sessions.status === "completed") {
+      return res.status(400).json({ message: "Session is already completed " });
+    }
+    sessions.status = "completed";
+    await sessions.save();
+    //delete stream video call
+    const call = streamClient.video.call("default", sessions.callId);
+    await call.delete({ hard: true });
+    //delete stream chat channel
+    const channel = chatClient.channel("messaging", sessions.callId);
+
+    await channel.delete();
+    res.status(200).json({ sessions, message: "Session ended successfully" });
+  } catch (error) {
+    console.error("Error to end session ", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
 /*
 Date.now() return current time in milliseconds
 
