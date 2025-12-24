@@ -83,14 +83,37 @@ export async function getMyRecentSession(req, res) {
 export async function getSessionById() {
   try {
     const { id } = req.params;
-    const sessions = await Session.findById( id )
+    const sessions = await Session.findById(id)
       .populate("host", "name profileImage clerkId email")
       .populate("participant", "name profileImage clerkId email");
 
-    if (!sessions) {
+    if (!sessions)
       return res.status(404).json({ message: "Session not found" });
-    }
 
+    res.status(200).json({ sessions });
+  } catch (error) {
+    console.error("Error to get session details", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function joinSession(req, res) {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const clerkId = req.user.clerkId;
+
+    const sessions = await Session.findById(id);
+    if (!sessions)
+      return res.statsus(404).json({ message: "Session not found" });
+    if (sessions.participant)
+      return res.status(404).json({ message: "Session is full" });
+    sessions.participant = userId;
+    await sessions.save();
+    const channel = chatClient.channel("messaging", sessions.callId);
+    /*addMembers gives users permission to participate in a Stream chat channel by adding them as members.
+    addMembers is a method on the channel object returned by the Stream SDK. */
+    await channel.addMembers([clerkId]);
     res.status(200).json({ sessions });
   } catch (error) {
     console.error("Error to get session details", error.message);

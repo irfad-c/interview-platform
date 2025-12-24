@@ -4,6 +4,7 @@ import {
   getActiveSession,
   getMyRecentSession,
   getSessionById,
+  joinSession,
 } from "../controllers/sessionController.js";
 import { protectRoute } from "../middleware/protectRoute.js";
 
@@ -12,5 +13,5 @@ router.post("/", protectRoute, createSession);
 router.get("/active", protectRoute, getActiveSession);
 router.get("/my-recent", protectRoute, getMyRecentSession);
 router.get(":/id", protectRoute, getSessionById);
-
+router.post(":/id/join", protectRoute, joinSession);
 export default router;
