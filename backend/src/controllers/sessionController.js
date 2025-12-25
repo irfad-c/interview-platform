@@ -6,13 +6,11 @@ export async function createSession(req, res) {
     const { problem, difficulty } = req.body;
     const userId = req.user._id;
     const clerkId = req.user.clerkId;
-
     if (!problem || !difficulty) {
       return res
         .status(400)
         .json({ message: "Both problem and difficulty required" });
     }
-
     //Generate a unique call Id for stream video
     const callId = `session_${Date.now()}_${Math.random()
       .toString(36)
@@ -80,16 +78,14 @@ export async function getMyRecentSession(req, res) {
   }
 }
 
-export async function getSessionById() {
+export async function getSessionById(req, res) {
   try {
     const { id } = req.params;
     const sessions = await Session.findById(id)
       .populate("host", "name profileImage clerkId email")
       .populate("participant", "name profileImage clerkId email");
-
     if (!sessions)
       return res.status(404).json({ message: "Session not found" });
-
     res.status(200).json({ sessions });
   } catch (error) {
     console.error("Error to get session details", error.message);
@@ -102,22 +98,18 @@ export async function joinSession(req, res) {
     const { id } = req.params;
     const userId = req.user._id;
     const clerkId = req.user.clerkId;
-
     const sessions = await Session.findById(id);
     if (!sessions)
-      return res.statsus(404).json({ message: "Session not found" });
-
-    if (sessions.active !== active)
+      return res.status(404).json({ message: "Session not found" });
+    if (sessions.status !== active)
       return res
         .status(400)
         .json({ message: "Cannot join a completed session" });
-
     if (sessions.host.toString() === userId.toString()) {
       return res
         .status(400)
         .json({ message: "Host cannot join their own session as participant" });
     }
-
     if (sessions.participant)
       return res.status(409).json({ message: "Session is full" });
     sessions.participant = userId;
@@ -126,6 +118,11 @@ export async function joinSession(req, res) {
     /*addMembers gives users permission to participate in a Stream chat channel by adding them as members.
     addMembers is a method on the channel object returned by the Stream SDK. */
     await channel.addMembers([clerkId]);
+    if (sessions.participant?.toString() === userId.toString()) {
+      return res
+        .status(400)
+        .json({ message: "You already joined this session" });
+    }
     res.status(200).json({ sessions });
   } catch (error) {
     console.error("Error to get session details", error.message);
@@ -137,29 +134,27 @@ export async function endSession(req, res) {
   try {
     const { id } = req.params;
     const userId = req.user._id;
-
     const sessions = await Session.findById(id);
     if (!sessions)
       return res.status(404).json({ message: "Session not found" });
-
     //check if the user is host
-
     if (sessions.host.toString() !== userId.toString()) {
       return res.status(403).json({ message: "Only host can end the session" });
     }
-
     //check if session is already completed
     if (sessions.status === "completed") {
       return res.status(400).json({ message: "Session is already completed " });
     }
-
     //delete stream video call
     const call = streamClient.video.call("default", sessions.callId);
     await call.delete({ hard: true });
     //delete stream chat channel
     const channel = chatClient.channel("messaging", sessions.callId);
-
-    await channel.delete();
+    try {
+      await channel.delete();
+    } catch (err) {
+      console.warn("Channel already deleted");
+    }
     sessions.status = "completed";
     await sessions.save();
     res.status(200).json({ sessions, message: "Session ended successfully" });
