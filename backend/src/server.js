@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/chat", chatRoutes);
-app.use("api/sessions", sessionRoutes);
+app.use("/api/sessions", sessionRoutes);
 
 const startServer = async () => {
   try {

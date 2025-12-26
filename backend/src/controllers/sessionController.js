@@ -101,7 +101,7 @@ export async function joinSession(req, res) {
     const sessions = await Session.findById(id);
     if (!sessions)
       return res.status(404).json({ message: "Session not found" });
-    if (sessions.status !== active)
+    if (sessions.status !== "active")
       return res
         .status(400)
         .json({ message: "Cannot join a completed session" });
@@ -112,17 +112,17 @@ export async function joinSession(req, res) {
     }
     if (sessions.participant)
       return res.status(409).json({ message: "Session is full" });
+    if (sessions.participant?.toString() === userId.toString()) {
+      return res
+        .status(400)
+        .json({ message: "You already joined this session" });
+    }
     sessions.participant = userId;
     await sessions.save();
     const channel = chatClient.channel("messaging", sessions.callId);
     /*addMembers gives users permission to participate in a Stream chat channel by adding them as members.
     addMembers is a method on the channel object returned by the Stream SDK. */
     await channel.addMembers([clerkId]);
-    if (sessions.participant?.toString() === userId.toString()) {
-      return res
-        .status(400)
-        .json({ message: "You already joined this session" });
-    }
     res.status(200).json({ sessions });
   } catch (error) {
     console.error("Error to get session details", error.message);
