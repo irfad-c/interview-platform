@@ -15,6 +15,7 @@ export const protectRoute = [
       if (!user) {
         res.status(401).json({ message: "User not found" });
       }
+      //we are attaching user property inside the request object
       req.user = user;
       next();
     } catch (error) {

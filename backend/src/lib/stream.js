@@ -1,4 +1,5 @@
 import { StreamChat } from "stream-chat";
+import { StreamClient } from "@stream-io/node-sdk";
 import { ENV } from "./env.js";
 
 const apiKey = ENV.STREAM_API_KEY;
@@ -8,6 +9,9 @@ if (!apiKey || !apiSecret) {
   throw new Error("STREAM_API_KEY or STREAM_API_SECRET is missing");
 }
 
+//stream video setup
+export const streamClient=new StreamClient(apiKey,apiSecret)
+//stream chat setup
 export const chatClient = StreamChat.getInstance(apiKey, apiSecret);
 
 export const upsertStreamUser = async (userData) => {
@@ -15,9 +19,9 @@ export const upsertStreamUser = async (userData) => {
     await chatClient.upsertUser(userData);
     console.log("Upserted stream user successfully");
   } catch (error) {
-    console.error("Cant upsert user from stream",error.message);
-    console.error("Details",error);
-    throw error
+    console.error("Cant upsert user from stream", error.message);
+    console.error("Details", error);
+    throw error;
   }
 };
 
