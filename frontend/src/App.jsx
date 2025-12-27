@@ -1,25 +1,14 @@
-import "./App.css";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  UserButton,
-} from "@clerk/clerk-react";
+import { Route, Routes } from "react-router";
+import HomePage from "./pages/HomePage.jsx";
+import ProblemsPage from "./pages/ProblemsPage.jsx";
 
 function App() {
   return (
     <>
-      <h1>Welcome to the App</h1>
-      <SignedIn>
-        <SignOutButton />
-      </SignedIn>
-      <SignedOut>
-        <SignInButton mode="model">
-          <button>Sign in</button>
-        </SignInButton>
-      </SignedOut>
-      <UserButton />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/problems" element={<ProblemsPage />} />
+      </Routes>
     </>
   );
 }
