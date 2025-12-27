@@ -7,21 +7,21 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 
-const HomePage = () => {
+function HomePage() {
   return (
     <>
       <h1>Welcome to the App</h1>
       <SignedIn>
         <SignOutButton />
+        <UserButton />
       </SignedIn>
       <SignedOut>
-        <SignInButton mode="model">
+        <SignInButton mode="modal">
           <button>Sign in</button>
         </SignInButton>
       </SignedOut>
-      <UserButton />
     </>
   );
-};
+}
 
 export default HomePage;

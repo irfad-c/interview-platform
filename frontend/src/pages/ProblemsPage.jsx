@@ -1,7 +1,14 @@
 import React from "react";
+import toast from "react-hot-toast";
 
-function problemsPage() {
-  return <div>problemsPage</div>;
+function ProblemsPage() {
+  return (
+    <>
+      <button onClick={() => toast.success("This is a success toast")}>
+        Click here to show the working of toast
+      </button>
+    </>
+  );
 }
 
-export default problemsPage;
+export default ProblemsPage;
