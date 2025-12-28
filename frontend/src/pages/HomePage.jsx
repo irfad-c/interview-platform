@@ -6,22 +6,26 @@ import {
   SignOutButton,
   UserButton,
 } from "@clerk/clerk-react";
+import toast from "react-hot-toast";
 
 function HomePage() {
   return (
     <>
-      <h1>Welcome to the App</h1>
+      <button onClick={() => toast.success("This is a success toast")}>
+        Click here to show the working of toast
+      </button>
+      <h1 className="bg-amber-200">Welcome to the App</h1>
       <SignedIn>
         <SignOutButton />
-        <UserButton />
       </SignedIn>
       <SignedOut>
         <SignInButton mode="modal">
           <button>Sign in</button>
         </SignInButton>
       </SignedOut>
+      <UserButton />
     </>
   );
 }
 
-export default HomePage;
+export default HomePage
