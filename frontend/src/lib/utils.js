@@ -10,3 +10,5 @@ export const getDifficultyBadgeClass = (difficulty) => {
       return "badge-ghost";
   }
 };
+
+/* This function maps a difficulty level to a DaisyUI badge color class in a safe and reusable way. */
