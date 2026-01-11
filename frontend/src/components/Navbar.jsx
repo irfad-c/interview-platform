@@ -38,9 +38,7 @@ function Navbar() {
                 isActive("/problems")
                   ? "bg-primary text-primary-content"
                   : "hover:bg-base-200 text-base-content/70 hover:text-base-content"
-              }
-              
-              `}
+              }`}
           >
             <div className="flex items-center gap-x-2.5">
               <BookOpenIcon className="size-4" />
@@ -62,7 +60,7 @@ function Navbar() {
           >
             <div className="flex items-center gap-x-2.5">
               <LayoutDashboardIcon className="size-4" />
-              <span className="font-medium hidden sm:inline">Dashbord</span>
+              <span className="font-medium hidden sm:inline">Dashboard</span>
             </div>
           </Link>
 
