@@ -16,7 +16,13 @@ const LANGUAGE_VERSIONS = {
  */
 export async function executeCode(language, code) {
   try {
-    //The output of languageConfig will be object.
+    /* 
+       The output of languageConfig will be object.
+       
+       languageConfig = {
+       language: "javascript",
+       version: "18.15.0"}; 
+       */
     const languageConfig = LANGUAGE_VERSIONS[language];
     if (!languageConfig) {
       return {
@@ -41,7 +47,7 @@ export async function executeCode(language, code) {
       }),
     });
     console.log("This is the resoponse", response);
-//ok = status 200–299
+    //ok = status 200–299
     if (!response.ok) {
       return {
         success: false,
