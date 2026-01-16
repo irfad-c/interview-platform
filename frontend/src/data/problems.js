@@ -73,6 +73,8 @@ class Solution {
     },
   },
 
+  //another key value pair
+
   "reverse-string": {
     id: "reverse-string",
     title: "Reverse String",
@@ -147,6 +149,8 @@ class Solution {
     },
   },
 
+  //another key value pair
+
   "valid-palindrome": {
     id: "valid-palindrome",
     title: "Valid Palindrome",
@@ -219,6 +223,8 @@ print(isPalindrome(" "))  # Expected: True`,
     },
   },
 
+  //another key value pair
+
   "maximum-subarray": {
     id: "maximum-subarray",
     title: "Maximum Subarray",
@@ -285,6 +291,8 @@ print(maxSubArray([5,4,-1,7,8]))  # Expected: 23`,
     },
   },
 
+//another key value pair
+
   "container-with-most-water": {
     id: "container-with-most-water",
     title: "Container With Most Water",
@@ -345,5 +353,26 @@ print(maxArea([1,1]))  # Expected: 1`,
       python: "49\n1",
       java: "49\n1",
     },
+  },
+
+  //another key value pair
+  
+};
+
+export const LANGUAGE_CONFIG = {
+  javascript: {
+    name: "JavaScript",
+    icon: "/javascript.png",
+    monacoLang: "javascript",
+  },
+  python: {
+    name: "Python",
+    icon: "/python.png",
+    monacoLang: "python",
+  },
+  java: {
+    name: "Java",
+    icon: "/java.png",
+    monacoLang: "java",
   },
 };

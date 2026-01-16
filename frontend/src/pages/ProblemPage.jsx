@@ -1,33 +1,92 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { PROBLEMS } from "../data/problems";
 import Navbar from "../components/Navbar";
+
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import ProblemDescription from "../components/ProblemDescription";
 import OutputPanel from "../components/OutputPanel";
 import CodeEditorPanel from "../components/CodeEditorPanel";
+import { executeCode } from "../lib/piston";
+import toast from "react-hot-toast";
+
 
 function ProblemPage() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [currentProblemId, setCurrentProblemId] = useState("two-sum");
-  const { id } = useParams();
+  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const [code, setCode] = useState(
+    PROBLEMS[currentProblemId].starterCode.javascript
+  );
   const [output, setOutput] = useState(null);
-
+  const [isRunning, setIsRunning] = useState(false);
   const currentProblem = PROBLEMS[currentProblemId];
-  if (!currentProblem) {
-    return <div>Problem not found</div>;
-  }
-
-  const handleProblemChange = (newProblemId) =>
-    navigate(`/problem/${newProblemId}`);
 
   // update problem when URL param changes
   useEffect(() => {
     if (id && PROBLEMS[id]) {
       setCurrentProblemId(id);
+      setCode(PROBLEMS[id].starterCode[selectedLanguage]);
       setOutput(null);
     }
-  }, [id]);
+  }, [id, selectedLanguage]);
+
+  const handleLanguageChange = (e) => {
+    const newLang = e.target.value;
+    setSelectedLanguage(newLang);
+    setCode(currentProblem.starterCode[newLang]);
+    setOutput(null);
+  };
+
+  const handleProblemChange = (newProblemId) =>
+    navigate(`/problem/${newProblemId}`);
+
+
+
+  const normalizeOutput = (output) => {
+    // normalize output for comparison (trim whitespace, handle different spacing)
+    return output
+      .trim()
+      .split("\n")
+      .map((line) =>
+        line
+          .trim()
+          // remove spaces after [ and before ]
+          .replace(/\[\s+/g, "[")
+          .replace(/\s+\]/g, "]")
+          // normalize spaces around commas to single space after comma
+          .replace(/\s*,\s*/g, ",")
+      )
+      .filter((line) => line.length > 0)
+      .join("\n");
+  };
+
+  const checkIfTestsPassed = (actualOutput, expectedOutput) => {
+    const normalizedActual = normalizeOutput(actualOutput);
+    const normalizedExpected = normalizeOutput(expectedOutput);
+    return normalizedActual == normalizedExpected;
+  };
+
+  const handleRunCode = async () => {
+    setIsRunning(true);
+    setOutput(null);
+    const result = await executeCode(selectedLanguage, code);
+    setOutput(result);
+    setIsRunning(false);
+    // check if code executed successfully and matches expected output
+    if (result.success) {
+      const expectedOutput = currentProblem.expectedOutput[selectedLanguage];
+      const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
+      if (testsPassed) {
+        toast.success("All tests passed! Great job!");
+      } else {
+        toast.error("Tests failed. Check your output!");
+      }
+    } else {
+      toast.error("Code execution failed!");
+    }
+  };
 
   return (
     <div className="h-screen bg-base-100 flex flex-col">
@@ -36,7 +95,7 @@ function ProblemPage() {
         <PanelGroup direction="horizontal">
           {/* left panel- problem desc */}
           <Panel defaultSize={40} minSize={30}>
-            {/*We are passing props to the ProblemDescription.jsx page */}
+            {/*propName={state variable} */}
             <ProblemDescription
               problem={currentProblem}
               currentProblemId={currentProblemId}
@@ -45,17 +104,27 @@ function ProblemPage() {
             />
           </Panel>
           <PanelResizeHandle className="w-2 bg-base-300 hover:bg-primary transition-colors cursor-col-resize" />
+
           {/* right panel- code editor & output */}
           <Panel defaultSize={60} minSize={30}>
             <PanelGroup direction="vertical">
               {/* Top panel - Code editor */}
               <Panel defaultSize={70} minSize={30}>
-                <CodeEditorPanel />
+                <CodeEditorPanel
+                  selectedLanguage={selectedLanguage}
+                  code={code}
+                  isRunning={isRunning}
+                  onLanguageChange={handleLanguageChange}
+                  onCodeChange={setCode}
+                  onRunCode={handleRunCode}
+                />
               </Panel>
               <PanelResizeHandle className="h-2 bg-base-300 hover:bg-primary transition-colors cursor-row-resize" />
+
               {/* Bottom panel - Output Panel*/}
+
               <Panel defaultSize={30} minSize={30}>
-                <OutputPanel />
+                <OutputPanel output={output} />
               </Panel>
             </PanelGroup>
           </Panel>
