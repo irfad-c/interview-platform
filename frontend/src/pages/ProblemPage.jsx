@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { PROBLEMS } from "../data/problems";
 import Navbar from "../components/Navbar";
-
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import ProblemDescription from "../components/ProblemDescription";
 import OutputPanel from "../components/OutputPanel";
 import CodeEditorPanel from "../components/CodeEditorPanel";
 import { executeCode } from "../lib/piston";
 import toast from "react-hot-toast";
+import confetti from "canvas-confetti";
 
 
 function ProblemPage() {
@@ -42,6 +42,18 @@ function ProblemPage() {
   const handleProblemChange = (newProblemId) =>
     navigate(`/problem/${newProblemId}`);
 
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 80,
+      spread: 250,
+      origin: { x: 0.2, y: 0.6 },
+    });
+    confetti({
+      particleCount: 80,
+      spread: 250,
+      origin: { x: 0.8, y: 0.6 },
+    });
+  };
 
 
   const normalizeOutput = (output) => {
@@ -79,6 +91,7 @@ function ProblemPage() {
       const expectedOutput = currentProblem.expectedOutput[selectedLanguage];
       const testsPassed = checkIfTestsPassed(result.output, expectedOutput);
       if (testsPassed) {
+        triggerConfetti();
         toast.success("All tests passed! Great job!");
       } else {
         toast.error("Tests failed. Check your output!");
