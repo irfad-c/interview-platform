@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { sessionApi } from "../api/sessions";
 
+//create new session
 export const useCreateSession = () => {
   const result = useMutation({
     mutationKey: ["createSession"],
@@ -13,6 +14,7 @@ export const useCreateSession = () => {
   return result;
 };
 
+//fetch all active sessions from backend
 export const useActiveSessions = () => {
   const result = useQuery({
     queryKey: ["activeSessions"],
@@ -21,6 +23,7 @@ export const useActiveSessions = () => {
   return result;
 };
 
+//Fetch sessions that belong to the current logged-in user
 export const useMyRecentSessions = () => {
   const result = useQuery({
     queryKey: ["myRecentSessions"],
@@ -29,6 +32,7 @@ export const useMyRecentSessions = () => {
   return result;
 };
 
+//Fetch ONE session using its ID
 export const useSessionById = (id) => {
   const result = useQuery({
     queryKey: ["session", id],
