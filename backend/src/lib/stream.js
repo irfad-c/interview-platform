@@ -33,6 +33,4 @@ export const deleteStreamUser = async (userId) => {
     console.error("Cant delete user from stream");
   }
 };
-/*
-getInstance creates (or returns) a single Stream Chat client that your backend will use to talk to Stream’s servers.
-*/
+

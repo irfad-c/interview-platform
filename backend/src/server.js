@@ -36,21 +36,3 @@ const startServer = async () => {
 
 startServer();
 
-/*
-serve is a ready-made Express handler provided by Inngest
-It knows how to:
-Receive events
-Trigger Inngest functions
-Handle retries, errors, execution
-*/
-
-/*
-const __dirname = path.resolve();
-if (ENV.NODE_ENV === "production") {
-  //Serve the built frontend files (React/Vite) to the user
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  //This is a catch-all route
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-  });
-}*/

@@ -1,3 +1,4 @@
+/* This function maps a difficulty level to a DaisyUI badge color class in a safe and reusable way. */
 export const getDifficultyBadgeClass = (difficulty) => {
   switch (difficulty?.toLowerCase()) {
     case "easy":
@@ -10,5 +11,3 @@ export const getDifficultyBadgeClass = (difficulty) => {
       return "badge-ghost";
   }
 };
-
-/* This function maps a difficulty level to a DaisyUI badge color class in a safe and reusable way. */

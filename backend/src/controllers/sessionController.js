@@ -163,23 +163,4 @@ export async function endSession(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-/*
-Date.now() return current time in milliseconds
 
-36 = number base (radix)
-Base 36 means:
-digits 0–9
-letters a–z
-So base-36 uses 36 characters total.
-
-.substring(7) = “cut off the first 7 characters”
-Starts at index 7, keeps everything from there to the end
-
-Math.random()
-0.842731924
-.toString(36)
-"0.q3m9s8"
-.substring(7)
-"s8"
-
-*/

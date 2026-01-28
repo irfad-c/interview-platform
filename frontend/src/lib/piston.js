@@ -1,5 +1,3 @@
-/* The Piston API is a high-performance, general-purpose code execution engine that allows users to run untrusted code in a sandboxed environment. It is commonly used to build in-browser code editors, compilers, and other services that require secure code execution in various programming languages.  */
-
 const PISTON_API = "https://emkc.org/api/v2/piston";
 
 const LANGUAGE_VERSIONS = {
@@ -16,13 +14,6 @@ const LANGUAGE_VERSIONS = {
  */
 export async function executeCode(language, code) {
   try {
-    /* 
-       The output of languageConfig will be object.
-       
-       languageConfig = {
-       language: "javascript",
-       version: "18.15.0"}; 
-       */
     const languageConfig = LANGUAGE_VERSIONS[language];
     if (!languageConfig) {
       return {
@@ -84,12 +75,3 @@ function getFileExtension(language) {
   };
   return extensions[language] || "txt";
 }
-
-/* What it does:
-Receives source code + language + version
-Runs that code in a sandboxed environment
-Sends back the output / error
-So in your app:
-Frontend → sends code to Piston
-Piston API → executes the code
-Frontend → receives output and shows it to user */
