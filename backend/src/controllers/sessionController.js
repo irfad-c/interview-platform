@@ -52,6 +52,7 @@ export async function getActiveSession(req, res) {
   try {
     const sessions = await Session.find({ status: "active" })
       .populate("host", "name profileImage email clerkId")
+      .populate("participant", "name profileImage email clerkId")
       .sort({ createdAt: -1 })
       .limit(20);
     res.status(200).json({ sessions });
@@ -163,4 +164,3 @@ export async function endSession(req, res) {
     res.status(500).json({ message: "Internal server error" });
   }
 }
-
