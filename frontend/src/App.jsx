@@ -1,10 +1,10 @@
-import { Route, Routes, Navigate } from "react-router-dom";
-import HomePage from "./pages/HomePage.jsx";
-import ProblemsPage from "./pages/ProblemsPage.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
 import { useUser } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
+import { Navigate, Route, Routes } from "react-router-dom";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
 import ProblemPage from "./pages/ProblemPage.jsx";
+import ProblemsPage from "./pages/ProblemsPage.jsx";
 
 function App() {
   const { isLoaded, isSignedIn } = useUser();

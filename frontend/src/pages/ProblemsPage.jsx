@@ -1,9 +1,8 @@
-import React from "react";
-import toast from "react-hot-toast";
-import Navbar from "../components/Navbar.jsx";
-import { Link } from "react-router";
-import { PROBLEMS } from "../data/problems.js";
 import { ChevronRightIcon, Code2Icon } from "lucide-react";
+import toast from "react-hot-toast";
+import { Link } from "react-router";
+import Navbar from "../components/Navbar.jsx";
+import { PROBLEMS } from "../data/problems.js";
 import { getDifficultyBadgeClass } from "../lib/utils.js";
 
 function ProblemsPage() {

@@ -2,10 +2,10 @@ import {
   ArrowRightIcon,
   Code2Icon,
   CrownIcon,
+  LoaderIcon,
   SparklesIcon,
   UsersIcon,
   ZapIcon,
-  LoaderIcon,
 } from "lucide-react";
 import { Link } from "react-router";
 import { getDifficultyBadgeClass } from "../lib/utils";

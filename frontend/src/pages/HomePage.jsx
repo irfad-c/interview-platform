@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { SignInButton } from "@clerk/clerk-react";
 import {
   ArrowRightIcon,
   CheckIcon,
@@ -8,7 +8,7 @@ import {
   VideoIcon,
   ZapIcon,
 } from "lucide-react";
-import { SignInButton } from "@clerk/clerk-react";
+import { Link } from "react-router";
 
 function HomePage() {
   return (

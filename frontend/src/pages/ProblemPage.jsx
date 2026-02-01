@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { PROBLEMS } from "../data/problems";
-import Navbar from "../components/Navbar";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import ProblemDescription from "../components/ProblemDescription";
-import OutputPanel from "../components/OutputPanel";
-import CodeEditorPanel from "../components/CodeEditorPanel";
-import { executeCode } from "../lib/piston";
-import toast from "react-hot-toast";
 import confetti from "canvas-confetti";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { useNavigate, useParams } from "react-router";
+import CodeEditorPanel from "../components/CodeEditorPanel";
+import Navbar from "../components/Navbar";
+import OutputPanel from "../components/OutputPanel";
+import ProblemDescription from "../components/ProblemDescription";
+import { PROBLEMS } from "../data/problems";
+import { executeCode } from "../lib/piston";
 
 
 function ProblemPage() {
