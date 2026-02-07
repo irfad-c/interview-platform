@@ -7,6 +7,7 @@ import { sessionApi } from "../api/sessions";
 export const useCreateSession = () => {
   const result = useMutation({
     mutationKey: ["createSession"],
+    //when we call mutate react query automatically calls sessionApi.createSession(payload)
     mutationFn: sessionApi.createSession,
     onSuccess: () => toast.success("Session created successfully!"),
     onError: (error) => toast.error(error.response?.data?.message || "Failed to create room"),
