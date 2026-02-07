@@ -27,7 +27,7 @@ app.use("/api/sessions", sessionRoutes);
 const startServer = async () => {
   try {
     await connectDB();
-    const port = ENV.PORT || 5001;
+    const port = ENV.PORT || 3000;
     app.listen(port, () => console.log("Server running on port:", port));
   } catch (error) {
     console.error("Error starting the server", error);
