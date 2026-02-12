@@ -7,15 +7,13 @@ import {
   useSessionById,
 } from "../hooks/useSessions";
 import { PROBLEMS } from "../data/problems";
-
+import { executeCode } from "../lib/piston";
 import Navbar from "../components/Navbar";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { getDifficultyBadgeClass } from "../lib/utils";
 import { Loader2Icon, LogOutIcon, PhoneOffIcon } from "lucide-react";
 import CodeEditorPanel from "../components/CodeEditorPanel";
 import OutputPanel from "../components/OutputPanel";
-
-
 
 function SessionPage() {
   const navigate = useNavigate();
@@ -36,8 +34,6 @@ function SessionPage() {
   const session = sessionData?.session;
   const isHost = session?.host?.clerkId === user?.id;
   const isParticipant = session?.participant?.clerkId === user?.id;
-
- 
 
   // find the problem data based on session problem title
   const problemData = session?.problem
@@ -79,12 +75,11 @@ function SessionPage() {
     setOutput(null);
   };
 
-  
   const handleRunCode = async () => {
     setIsRunning(true);
     setOutput(null);
-
-
+    const result = await executeCode(selectedLanguage, code);
+    setOutput(result);
     setIsRunning(false);
   };
 
@@ -274,8 +269,6 @@ function SessionPage() {
           </Panel>
 
           <PanelResizeHandle className="w-2 bg-base-300 hover:bg-primary transition-colors cursor-col-resize" />
-
-     
         </PanelGroup>
       </div>
     </div>
