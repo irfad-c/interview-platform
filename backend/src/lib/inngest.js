@@ -6,6 +6,7 @@ import { welcomeEmail } from "./resend.js";
 
 //This file listen for an event from clerk
 export const inngest = new Inngest({ id: "talent-iq" });
+
 //sync a new user into mongoDB database
 const syncUser = inngest.createFunction(
   { id: "sync user" },
@@ -36,11 +37,6 @@ const syncUser = inngest.createFunction(
       image: newUser.profileImage,
     });
     console.log("Stream upsert user fininshed");
-    await welcomeEmail({
-      to: newUser.email,
-      name: newUser.name,
-    });
-    console.log("Welcome Email sent");
   }
 );
 

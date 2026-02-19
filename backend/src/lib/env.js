@@ -12,5 +12,4 @@ export const ENV = {
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
   CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
   CLIENT_URL: process.env.CLIENT_URL,
-  RESEND_API_KEY: process.env.RESEND_API_KEY,
 };
